@@ -11,11 +11,11 @@ describe('Block', () => {
 		block = Block.mineBlock(lastBlock, data)
 	})
 
-	it('sets the `data` to match the input', () => {
+	test('should set the `data` to match the input', () => {
 		expect(block.data).toEqual(data)
 	})
 
-	it('should sets the `lastHash` to match the hash of hte last block', () => {
+	test('should set the `lastHash` to match the hash of hte last block', () => {
 		expect(block.lastHash).toEqual(lastBlock.hash)
 	})
 })
