@@ -1,10 +1,12 @@
 import express from 'express'
 import Blockchain from '../blockchain'
+import P2pServer from './p2p-server'
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.HTTP_PORT || process.env.PORT || 3001
 
 const app = express()
 const bc = new Blockchain()
+const p2pServer = new P2pServer(bc)
 
 // Middleware
 app.use(express.json())
@@ -28,3 +30,6 @@ app.post('/mine', (req, res) => {
 app.listen(PORT, () => {
 	console.info(`App listening on port ${PORT}`)
 })
+
+// Open web sockets
+p2pServer.listen()
