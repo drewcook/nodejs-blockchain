@@ -1,5 +1,5 @@
-import type { IBlockchain } from './blockchain'
-import Blockchain from './blockchain'
+import type { IBlockchain } from '.'
+import Blockchain from '.'
 import Block from './block'
 
 describe('Blockchain', () => {
