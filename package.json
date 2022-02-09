@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --collectCoverage=false --silent",
-    "start": "nodemon app/index.ts"
+    "start": "nodemon app/index.ts",
+    "dev-test": "nodemon dev-test.ts"
   },
   "prettier": "altheajs-prettier-config",
   "devDependencies": {

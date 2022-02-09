@@ -1,7 +1,4 @@
 import Block from './block'
-import config from '../config'
-
-const { DIFFICULTY } = config
 
 describe('Block', () => {
 	let data: any
@@ -23,7 +20,16 @@ describe('Block', () => {
 	})
 
 	test('should generate a hash that matches the difficulty', () => {
-		expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY))
-		console.log(block.toString())
+		expect(block.hash.substring(0, block.difficulty)).toEqual('0'.repeat(block.difficulty))
+	})
+
+	test('should lower the mining difficulty for slowly mined blocks', () => {
+		const date = new Date(block.timestamp).getTime()
+		expect(Block.adjustDifficulty(block, new Date(date + 360000))).toEqual(block.difficulty - 1)
+	})
+
+	test('should increase the mining difficulty for quickly mined blocks', () => {
+		const date = new Date(block.timestamp).getTime()
+		expect(Block.adjustDifficulty(block, new Date(date + 1))).toEqual(block.difficulty + 1)
 	})
 })
