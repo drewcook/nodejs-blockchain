@@ -21,9 +21,10 @@ app.get('/blocks', (req, res) => {
 app.post('/mine', (req, res) => {
 	const block = bc.addBlock(req.body.data)
 	console.log(`New block added: ${block.toString()}`)
-	// res.status(200).json()
-	// or redirect to return all the blocks
-	res.redirect('/blocks')
+	// Sync chains on each added block so chains stay up to date
+	p2pServer.syncChains()
+	// Get blocks
+	res.status(200).json(bc.chain)
 })
 
 // Open server and listen

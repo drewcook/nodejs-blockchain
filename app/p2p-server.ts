@@ -27,6 +27,12 @@ class P2pServer {
   private connectSocket(socket: ws): void {
     this.sockets.push(socket)
     console.info('Socket connected');
+
+    // Route the message
+    this.messageHandler(socket)
+
+    // Pass around the blockchain
+    this.sendChain(socket)
   }
 
   private connectToPeers(): void {
@@ -38,6 +44,25 @@ class P2pServer {
       socket.on('open', () => {
         this.connectSocket(socket)
       })
+    })
+  }
+
+  public messageHandler(socket: ws): void {
+    socket.on('message', (msg: string) => {
+      const data = JSON.parse(msg)
+      // Replace chain
+      this.blockchain.replaceChain(data)
+      console.log({data});
+    })
+  }
+
+  private sendChain(socket: ws): void {
+    socket.send(JSON.stringify(this.blockchain.chain))
+  }
+
+  public syncChains(): void {
+    this.sockets.forEach(socket => {
+      this.sendChain(socket)
     })
   }
 }
