@@ -7,7 +7,7 @@
   "author": "Drew Cook <drewcook29@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest --collectCoverage=false --watchAll",
+    "test": "jest --collectCoverage=false --silent",
     "start": "nodemon app/index.ts"
   },
   "prettier": "altheajs-prettier-config",

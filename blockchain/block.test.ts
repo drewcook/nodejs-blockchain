@@ -1,4 +1,7 @@
 import Block from './block'
+import config from '../config'
+
+const { DIFFICULTY } = config
 
 describe('Block', () => {
 	let data: any
@@ -17,5 +20,10 @@ describe('Block', () => {
 
 	test('should set the `lastHash` to match the hash of hte last block', () => {
 		expect(block.lastHash).toEqual(lastBlock.hash)
+	})
+
+	test('should generate a hash that matches the difficulty', () => {
+		expect(block.hash.substring(0, DIFFICULTY)).toEqual('0'.repeat(DIFFICULTY))
+		console.log(block.toString())
 	})
 })
