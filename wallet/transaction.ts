@@ -17,12 +17,35 @@ export interface ITransaction {
   id: string
   input: any
   outputs: TransactionOutput[]
+  update(senderWallet: IWallet, recipient: string, amount: number): ITransaction | undefined
 }
 
 class Transaction implements ITransaction {
   public id: string = ChainUtil.id()
   public input: TransactionInput | null = null
   public outputs: TransactionOutput[] = []
+
+  // Adds a new transaction output to an existing transaction by the sender
+  // Find output that it may have previously generated with a transaction by matching the sender's wallet public key
+  public update(senderWallet: IWallet, recipient: string, amount: number): ITransaction | undefined {
+    const senderOutput = this.outputs.find(output => output.address === senderWallet.publicKey)
+    // Cannot transact an amount that would end up being greater than what balance would end up with after
+    if (!senderOutput) return
+    // Can't exceed balance
+    if (amount > senderOutput.amount) {
+      console.log(`Amount: ${amount} exceeds balance.`);
+      return
+    }
+    // Subtract the amount from the sender
+    senderOutput.amount = senderOutput.amount - amount
+    // New transaction update needs an output, delegated amount and recipient
+    this.outputs.push({ amount, address: recipient})
+    // Signature won't be valid, generate a new one
+    // Sign the transaction with the sender
+    Transaction.signTransaction(this, senderWallet)
+
+    return this
+  }
 
   public static newTransaction(senderWallet: IWallet, recipient: string, amount: number): ITransaction | undefined {
     const transaction = new this()
@@ -70,6 +93,7 @@ class Transaction implements ITransaction {
      if (!transaction) return false
     return ChainUtil.verifySignature(transaction.input.address, transaction.input.signature, ChainUtil.hash(transaction.outputs))
   }
+
 }
 
 export default Transaction;
